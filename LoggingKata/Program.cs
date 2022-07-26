@@ -16,7 +16,6 @@ namespace LoggingKata
 
             var lines = File.ReadAllLines(csvPath);
 
-            logger.LogInfo($"Lines: {lines[0]}");
             if (lines.Length == 0)
             {
                 logger.LogError("file has no input");
@@ -37,30 +36,28 @@ namespace LoggingKata
             for (int i = 0; i < locations.Length; i++)
             {
                 var locA = locations[i];
-
-                var corA = new GeoCoordinate();
-                corA.Latitude = locA.Location.Latitude;
-                corA.Longitude = locA.Location.Longitude;
+                GeoCoordinate corA = new GeoCoordinate(locA.Location.Latitude, locA.Location.Longitude);
+               
 
                 for (int j = 0; j < locations.Length; j++)
                 {
                     var locB = locations[j];
-
-                    var corB = new GeoCoordinate();
-                    corB.Latitude = locB.Location.Latitude;
-                    corB.Longitude = locB.Location.Longitude;
+                    GeoCoordinate corB = new GeoCoordinate(locB.Location.Latitude, locB.Location.Longitude);
+                   
 
                     if (corA.GetDistanceTo(corB) > distance)
                     {
-                        distance = corA.GetDistanceTo(corB);
+                        distance = corA.GetDistanceTo(corB) ;
                         tacoBell1 = locA;
                         tacoBell2 = locB;
                     }
-
+                   
                 }
             }
 
-            logger.LogInfo($"{tacoBell1.Name} and {tacoBell2.Name} are the farthest apart with a distance of {distance} separating them.");
+            distance = Math.Round(distance / 1609.344,2);
+
+            logger.LogInfo($"{tacoBell1.Name} and {tacoBell2.Name} are the farthest apart with a distance of {distance} Miles separating them.");
 
         }
     }
